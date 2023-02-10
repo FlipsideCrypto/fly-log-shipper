@@ -9,7 +9,7 @@
   type = "nats"
   url = "nats://[fdaa::3]:4223"
   queue = "${QUEUE-}"
-  subject = "${SUBJECT-logs.>}"
+  subject = "${SUBJECT-logs.data-app.>}"
   auth.strategy = "user_password"
   auth.user_password.user = "${ORG-personal}"
   auth.user_password.password = "${ACCESS_TOKEN?}"
@@ -20,6 +20,8 @@
   inputs = ["nats"]
   source = '''
   . = parse_json!(.message)
+  .service  = .fly.app.name
+  .hostname = .fly.host
   '''
 
 [sinks.fly_log_metrics_prometheus]
